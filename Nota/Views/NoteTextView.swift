@@ -102,7 +102,9 @@ struct NoteTextView: NSViewRepresentable {
                   new.location < line.hiddenEnd
             else { return new }
 
-            let leaving = old.length == 0 && old.location == line.hiddenEnd && new.location < old.location
+            // ⌘← heads for the start of the line on purpose; only a step left leaves it.
+            let jumping = NSApp.currentEvent?.modifierFlags.contains(.command) == true
+            let leaving = old.length == 0 && old.location == line.hiddenEnd && new.location < old.location && !jumping
             if leaving && line.range.location > 0 {
                 return NSRange(location: line.range.location - 1, length: 0)
             }

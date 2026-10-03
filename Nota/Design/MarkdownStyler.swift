@@ -315,11 +315,13 @@ enum MarkdownStyler {
     private static func hang(_ line: MarkdownLine, in storage: NSTextStorage, firstLineOffset: CGFloat = 0) {
         let indent = CGFloat(line.depth + 1) * MarkdownScanner.markerIndent
         let floor = CGFloat(line.depth) * MarkdownScanner.markerIndent
-        storage.addAttribute(
-            .paragraphStyle,
-            value: paragraph(indent: indent, firstLine: max(floor, indent - firstLineOffset)),
-            range: line.range
-        )
+        let style = paragraph(indent: indent, firstLine: max(floor, indent - firstLineOffset))
+        // A hidden tab still jumps to the next tab stop — fonts do not size tabs.
+        // With stops a point apart, the nesting tabs take no room and the indent
+        // above does the work.
+        style.tabStops = []
+        style.defaultTabInterval = 1
+        storage.addAttribute(.paragraphStyle, value: style, range: line.range)
     }
 
     private static func paragraph(indent: CGFloat = 0, firstLine: CGFloat? = nil, spacingBefore: CGFloat = 0) -> NSMutableParagraphStyle {
