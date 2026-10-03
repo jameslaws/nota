@@ -1,0 +1,32 @@
+name: Nota
+
+options:
+  bundleIdPrefix: com.jameslaws
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: 2R6UK9F228
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_HARDENED_RUNTIME: YES
+
+targets:
+  Nota:
+    type: application
+    platform: macOS
+    sources:
+      - path: Nota
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.jameslaws.nota
+        PRODUCT_NAME: Nota
+        INFOPLIST_FILE: Nota/Info.plist
+        CODE_SIGN_ENTITLEMENTS: Nota/Nota.entitlements

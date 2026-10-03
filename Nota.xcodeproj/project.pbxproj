@@ -1,0 +1,376 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02FBBA89B171A8A128F7E251 /* NoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23937F3B73DB9FA374BB43E /* NoteView.swift */; };
+		2E3E127FDB94FD00A283566E /* NoteWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6E94C8933BF75EB01AE25C /* NoteWindows.swift */; };
+		37AB87CD69E7B4C9D3D61476 /* ResizeGrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = E700CBFA11A8931745BF6B80 /* ResizeGrip.swift */; };
+		4D01B8AC16DF639C46EAA2B3 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7694DF7028193E04BD67848 /* NoteStore.swift */; };
+		714ED78ACCFC72092EA25B04 /* NoteTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE98B8C3E4E88E972CCD3E87 /* NoteTextView.swift */; };
+		89CD5C1FBA1BADB4CB92C4B2 /* MarkdownScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73022DDA240FAA244A80233A /* MarkdownScanner.swift */; };
+		94CEEB9F6CCBFF87C830D496 /* MarkdownStyler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C55F636330B02109C69FE2 /* MarkdownStyler.swift */; };
+		BD19A96B8F5CE39E2C16D8A1 /* NotaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4362EDAF5935D92B6BDE93D /* NotaApp.swift */; };
+		D3227538492C4B1BA9C96855 /* NotePaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8D52C9DFD814857BEECEA6 /* NotePaper.swift */; };
+		D903328A03A3EB7AE231D561 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1F60E6BDC6D647C8C37012 /* Note.swift */; };
+		DCCEFD3819183BDD53A912B2 /* StatusIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B0DFEA39684AA614AADBF /* StatusIcon.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		42C55F636330B02109C69FE2 /* MarkdownStyler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownStyler.swift; sourceTree = "<group>"; };
+		4D0B0DFEA39684AA614AADBF /* StatusIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusIcon.swift; sourceTree = "<group>"; };
+		5C8D52C9DFD814857BEECEA6 /* NotePaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotePaper.swift; sourceTree = "<group>"; };
+		5F94B22E77528F06516D9669 /* Nota.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nota.entitlements; sourceTree = "<group>"; };
+		73022DDA240FAA244A80233A /* MarkdownScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownScanner.swift; sourceTree = "<group>"; };
+		8C6E94C8933BF75EB01AE25C /* NoteWindows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWindows.swift; sourceTree = "<group>"; };
+		A4362EDAF5935D92B6BDE93D /* NotaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotaApp.swift; sourceTree = "<group>"; };
+		A7694DF7028193E04BD67848 /* NoteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStore.swift; sourceTree = "<group>"; };
+		A82D47AEE5E1A86147F1FE5B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		AE98B8C3E4E88E972CCD3E87 /* NoteTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextView.swift; sourceTree = "<group>"; };
+		CD6D4862C473167B62DA9D30 /* Nota.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nota.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D23937F3B73DB9FA374BB43E /* NoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteView.swift; sourceTree = "<group>"; };
+		DD1F60E6BDC6D647C8C37012 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
+		E700CBFA11A8931745BF6B80 /* ResizeGrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeGrip.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		12AA5D66CC99EAA9580BA1A9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CD6D4862C473167B62DA9D30 /* Nota.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		33EBC7DE16CE073AA83B24BA = {
+			isa = PBXGroup;
+			children = (
+				7D7355447E087238EBFCFA4B /* Nota */,
+				12AA5D66CC99EAA9580BA1A9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4188E1CA153DAEDAEF94EB87 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A7694DF7028193E04BD67848 /* NoteStore.swift */,
+				8C6E94C8933BF75EB01AE25C /* NoteWindows.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		7D7355447E087238EBFCFA4B /* Nota */ = {
+			isa = PBXGroup;
+			children = (
+				B8C1E280F29B258B7F5FCABA /* Design */,
+				C6D82C3F0948D1F6EC413D3A /* Models */,
+				4188E1CA153DAEDAEF94EB87 /* Services */,
+				A17975EED11765047519339C /* Views */,
+				A82D47AEE5E1A86147F1FE5B /* Info.plist */,
+				5F94B22E77528F06516D9669 /* Nota.entitlements */,
+				A4362EDAF5935D92B6BDE93D /* NotaApp.swift */,
+			);
+			path = Nota;
+			sourceTree = "<group>";
+		};
+		A17975EED11765047519339C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AE98B8C3E4E88E972CCD3E87 /* NoteTextView.swift */,
+				D23937F3B73DB9FA374BB43E /* NoteView.swift */,
+				E700CBFA11A8931745BF6B80 /* ResizeGrip.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		B8C1E280F29B258B7F5FCABA /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				73022DDA240FAA244A80233A /* MarkdownScanner.swift */,
+				42C55F636330B02109C69FE2 /* MarkdownStyler.swift */,
+				5C8D52C9DFD814857BEECEA6 /* NotePaper.swift */,
+				4D0B0DFEA39684AA614AADBF /* StatusIcon.swift */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		C6D82C3F0948D1F6EC413D3A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DD1F60E6BDC6D647C8C37012 /* Note.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		325665C5FB373DFEA3AAAFA7 /* Nota */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3B2DA020AD6346BB180367E /* Build configuration list for PBXNativeTarget "Nota" */;
+			buildPhases = (
+				3E49F38F614DE8C8496E1AB0 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Nota;
+			packageProductDependencies = (
+			);
+			productName = Nota;
+			productReference = CD6D4862C473167B62DA9D30 /* Nota.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		294AE30C2E1A10829736D2EF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					325665C5FB373DFEA3AAAFA7 = {
+						DevelopmentTeam = 2R6UK9F228;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0EB2B4CD1D08FE2E05FC046B /* Build configuration list for PBXProject "Nota" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 33EBC7DE16CE073AA83B24BA;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 12AA5D66CC99EAA9580BA1A9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				325665C5FB373DFEA3AAAFA7 /* Nota */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3E49F38F614DE8C8496E1AB0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89CD5C1FBA1BADB4CB92C4B2 /* MarkdownScanner.swift in Sources */,
+				94CEEB9F6CCBFF87C830D496 /* MarkdownStyler.swift in Sources */,
+				BD19A96B8F5CE39E2C16D8A1 /* NotaApp.swift in Sources */,
+				D903328A03A3EB7AE231D561 /* Note.swift in Sources */,
+				D3227538492C4B1BA9C96855 /* NotePaper.swift in Sources */,
+				4D01B8AC16DF639C46EAA2B3 /* NoteStore.swift in Sources */,
+				714ED78ACCFC72092EA25B04 /* NoteTextView.swift in Sources */,
+				02FBBA89B171A8A128F7E251 /* NoteView.swift in Sources */,
+				2E3E127FDB94FD00A283566E /* NoteWindows.swift in Sources */,
+				37AB87CD69E7B4C9D3D61476 /* ResizeGrip.swift in Sources */,
+				DCCEFD3819183BDD53A912B2 /* StatusIcon.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		36C96E42DC6369F77B2E99F2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 2R6UK9F228;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		3A4B2215E57E519359D60257 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Nota/Nota.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Nota/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jameslaws.nota;
+				PRODUCT_NAME = Nota;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		3C82FD817E34087B98FCA8A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Nota/Nota.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Nota/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.jameslaws.nota;
+				PRODUCT_NAME = Nota;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		E3F3A35D26475292E1A69FD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2R6UK9F228;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0EB2B4CD1D08FE2E05FC046B /* Build configuration list for PBXProject "Nota" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				36C96E42DC6369F77B2E99F2 /* Debug */,
+				E3F3A35D26475292E1A69FD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F3B2DA020AD6346BB180367E /* Build configuration list for PBXNativeTarget "Nota" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A4B2215E57E519359D60257 /* Debug */,
+				3C82FD817E34087B98FCA8A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 294AE30C2E1A10829736D2EF /* Project object */;
+}
