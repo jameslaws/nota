@@ -220,11 +220,12 @@ final class NoteEditor: NSTextView {
 }
 
 /// A menu item that runs a closure, so SwiftUI views can build AppKit menus
-/// without a target object of their own.
-final class ClosureMenuItem: NSMenuItem {
-    private let handler: () -> Void
+/// without a target object of their own. AppKit declares menu items outside the
+/// main actor, so this one is too, and hops back onto it to run the closure.
+nonisolated final class ClosureMenuItem: NSMenuItem {
+    private let handler: @MainActor () -> Void
 
-    init(title: String, handler: @escaping () -> Void) {
+    init(title: String, handler: @escaping @MainActor () -> Void) {
         self.handler = handler
         super.init(title: title, action: #selector(fire), keyEquivalent: "")
         target = self
@@ -235,6 +236,6 @@ final class ClosureMenuItem: NSMenuItem {
     }
 
     @objc private func fire() {
-        handler()
+        MainActor.assumeIsolated { handler() }
     }
 }
