@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 /// A single sheet of paper.
@@ -19,11 +20,17 @@ struct NoteView: View {
     var onResize: (CGSize) -> Void
     var onResizeEnd: () -> Void
     var onSpacesChange: (NoteSpaces) -> Void
+    var onKeptChange: (Bool) -> Void
+    var onPutAway: () -> Void
 
     @State private var isHovering = false
     @State private var confirmingDelete = false
 
+    /// Controls show on hover only.
     private var raised: Bool { isHovering }
+    /// The paper goes solid on hover, and stays solid on a kept note — that is the
+    /// one you are working from, so it should never be hard to read.
+    private var solid: Bool { isHovering || note.kept }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -68,7 +75,7 @@ struct NoteView: View {
             startPoint: .top,
             endPoint: .bottom
         )
-        .opacity(raised ? 0.94 : 0.55)
+        .opacity(solid ? 0.94 : 0.55)
     }
 
     /// The window's own resize edge sits out in the transparent shadow margin where
@@ -88,7 +95,7 @@ struct NoteView: View {
 
             Spacer(minLength: 0)
 
-            restingPin
+            restingMarks
 
             if confirmingDelete {
                 Text("Delete?")
@@ -96,15 +103,13 @@ struct NoteView: View {
                     .foregroundStyle(note.colour.ink.opacity(0.75))
             }
 
-            // Hollow pin means loose, filled pin means pinned. The double-rectangle
-            // this replaced read as "duplicate".
+            // Open eye: hides with the rest. Filled eye: kept on screen. Pinning to a
+            // desktop lives in the right-click menu; it is rarely what you reach for.
             button(
-                note.spaces == .all ? "pin" : "pin.fill",
-                help: note.spaces == .all ? "On all desktops — click to pin here" : "Pinned to this desktop"
+                note.kept ? "eye.fill" : "eye",
+                help: note.kept ? "Kept on screen — click to let it hide with the others" : "Keep on screen when the other notes hide"
             ) {
-                let next: NoteSpaces = note.spaces == .all ? .desktop : .all
-                note.spaces = next
-                onSpacesChange(next)
+                toggleKept()
             }
 
             button("plus", help: "New note", action: onNew)
@@ -140,13 +145,53 @@ struct NoteView: View {
         }
     }
 
-    /// The pin stays faintly visible with the controls hidden, so a note that lives
-    /// on one desktop says so without being hovered.
-    private var restingPin: some View {
-        Image(systemName: "pin.fill")
-            .font(.system(size: 8, weight: .semibold))
-            .foregroundStyle(note.colour.ink.opacity(0.3))
-            .opacity(note.spaces == .desktop && !raised ? 1 : 0)
+    /// Faint marks that stay with the controls hidden, so a kept note or one that
+    /// lives on a single desktop says so without being hovered.
+    private var restingMarks: some View {
+        HStack(spacing: 4) {
+            if note.spaces == .desktop {
+                Image(systemName: "pin.fill")
+            }
+            if note.kept {
+                Image(systemName: "eye.fill")
+            }
+        }
+        .font(.system(size: 8, weight: .semibold))
+        .foregroundStyle(note.colour.ink.opacity(0.3))
+        .opacity(raised ? 0 : 1)
+    }
+
+    // MARK: - State
+
+    private func toggleKept() {
+        note.kept.toggle()
+        onKeptChange(note.kept)
+    }
+
+    private func toggleSpaces() {
+        let next: NoteSpaces = note.spaces == .all ? .desktop : .all
+        note.spaces = next
+        onSpacesChange(next)
+    }
+
+    private func putAway() {
+        // Mirrors what the window does, so this sheet's copy stays truthful.
+        note.kept = false
+        onPutAway()
+    }
+
+    /// Nota's own items, placed above the usual text menu on a right-click.
+    private func menuItems() -> [NSMenuItem] {
+        let keep = ClosureMenuItem(title: "Keep on Screen") { toggleKept() }
+        keep.state = note.kept ? .on : .off
+
+        let pin = ClosureMenuItem(title: "Pin to This Desktop") { toggleSpaces() }
+        pin.state = note.spaces == .desktop ? .on : .off
+
+        // A pinned note holds its place on its desktop rather than joining the stack.
+        let away = ClosureMenuItem(title: note.spaces == .desktop ? "Hide Note" : "Put in Stack") { putAway() }
+
+        return [keep, pin, away]
     }
 
     private func button(_ symbol: String, help: String, action: @escaping () -> Void) -> some View {
@@ -176,7 +221,8 @@ struct NoteView: View {
                     onChange(self.note)
                 }
             ),
-            paper: note.colour
+            paper: note.colour,
+            menuItems: menuItems
         )
         .padding(.bottom, 6)
     }

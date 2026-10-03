@@ -11,6 +11,7 @@ import SwiftUI
 struct NoteTextView: NSViewRepresentable {
     @Binding var text: String
     let paper: NotePaper
+    var menuItems: () -> [NSMenuItem] = { [] }
 
     func makeNSView(context: Context) -> NSScrollView {
         let view = NoteEditor()
@@ -29,6 +30,7 @@ struct NoteTextView: NSViewRepresentable {
         // still covers the whole sheet.
         view.textContainerInset = NSSize(width: MarkdownStyler.gutter, height: 10)
         view.paper = paper
+        view.menuItems = menuItems
         view.string = text
         view.onFocusChange = { [weak view] in
             guard let view else { return }
@@ -49,6 +51,7 @@ struct NoteTextView: NSViewRepresentable {
         guard let view = scroll.documentView as? NoteEditor else { return }
         context.coordinator.parent = self
         view.paper = paper
+        view.menuItems = menuItems
 
         if view.string != text {
             let selection = view.selectedRange()
@@ -109,6 +112,20 @@ final class NoteEditor: NSTextView {
     var paper: NotePaper = .butter
     var layout = MarkdownStyler.Layout()
     var onFocusChange: (() -> Void)?
+    var menuItems: () -> [NSMenuItem] = { [] }
+
+    /// The note's own items go first, above AppKit's usual text menu.
+    override func menu(for event: NSEvent) -> NSMenu? {
+        let menu = super.menu(for: event) ?? NSMenu()
+        let items = menuItems()
+        guard !items.isEmpty else { return menu }
+
+        menu.insertItem(.separator(), at: 0)
+        for item in items.reversed() {
+            menu.insertItem(item, at: 0)
+        }
+        return menu
+    }
 
     override func becomeFirstResponder() -> Bool {
         let accepted = super.becomeFirstResponder()
@@ -199,5 +216,25 @@ final class NoteEditor: NSTextView {
             ink.withAlphaComponent(0.45).setStroke()
             path.stroke()
         }
+    }
+}
+
+/// A menu item that runs a closure, so SwiftUI views can build AppKit menus
+/// without a target object of their own.
+final class ClosureMenuItem: NSMenuItem {
+    private let handler: () -> Void
+
+    init(title: String, handler: @escaping () -> Void) {
+        self.handler = handler
+        super.init(title: title, action: #selector(fire), keyEquivalent: "")
+        target = self
+    }
+
+    required init(coder: NSCoder) {
+        fatalError("not used")
+    }
+
+    @objc private func fire() {
+        handler()
     }
 }

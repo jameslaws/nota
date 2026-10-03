@@ -18,10 +18,14 @@ private let log = Logger(subsystem: "com.jameslaws.nota", category: "windows")
 @Observable
 final class NoteWindows {
 
-    private(set) var isVisible = true
     private var panels: [UUID: NotePanel] = [:]
     private weak var store: NoteStore?
     private var clickMonitor: Any?
+    let stack = NoteStack()
+
+    /// Called after anything that changes what is on screen, so the menu bar icon
+    /// can keep up with changes made from inside a note or from the stack.
+    var onChange: (() -> Void)?
 
     /// Deliberately without `.stationary`. That flag pins a window to the desktop
     /// the way wallpaper is pinned, which fights `.canJoinAllSpaces` — the two
@@ -35,6 +39,11 @@ final class NoteWindows {
 
     func attach(to store: NoteStore) {
         self.store = store
+        stack.attach(
+            to: store,
+            onPullOut: { [weak self] id in self?.reveal(id) },
+            onShowAll: { [weak self] in self?.showAll() }
+        )
         watchForClicksAway()
         sync()
     }
@@ -76,16 +85,55 @@ final class NoteWindows {
             panels[note.id] = makePanel(for: note)
         }
 
-        if isVisible { showAll() }
+        applyAll()
     }
 
     // MARK: - Visibility
+    //
+    // Each note carries its own hidden flag rather than the app holding one switch
+    // for everything, because kept notes and notes pulled from the stack have to be
+    // able to stay out while the rest are away.
 
+    /// True while any note that *can* be put away is on screen — what the menu bar
+    /// click acts on. Kept notes do not count; they never hide.
+    var isVisible: Bool {
+        store?.notes.contains { !$0.kept && !$0.hidden } ?? false
+    }
+
+    /// The menu bar click: put the loose notes away, or bring everything back.
     @discardableResult
     func toggle() -> Bool {
-        isVisible.toggle()
-        if isVisible { showAll() } else { hideAll() }
+        if isVisible { hideAll() } else { showAll() }
         return isVisible
+    }
+
+    func showAll() {
+        store?.modifyAll { $0.hidden = false }
+        applyAll()
+    }
+
+    func hideAll() {
+        store?.modifyAll { if !$0.kept { $0.hidden = true } }
+        applyAll()
+    }
+
+    /// Tucks one note away on its own. Putting a kept note away means you are done
+    /// working from it, so it stops being kept.
+    func putAway(_ id: UUID) {
+        store?.modify(id) {
+            $0.hidden = true
+            $0.kept = false
+        }
+        applyAll()
+    }
+
+    func setKept(_ kept: Bool, for id: UUID) {
+        store?.modify(id) {
+            $0.kept = kept
+            // A kept note is on screen by definition.
+            if kept { $0.hidden = false }
+        }
+        applyAll()
     }
 
     // Hiding fades rather than orders out. `orderOut` throws away a window's Space
@@ -93,41 +141,51 @@ final class NoteWindows {
     // desktop you happened to be looking at. Left ordered-in at zero alpha, a pinned
     // note stays exactly where it was put.
 
-    func showAll() {
-        isVisible = true
-        for panel in panels.values {
-            panel.ignoresMouseEvents = false
-            panel.alphaValue = 1
-            panel.orderFrontRegardless()
-        }
+    private func applyAll() {
+        guard let store else { return }
+        for note in store.notes { apply(note) }
+        stack.refresh()
+        onChange?()
     }
 
-    func hideAll() {
-        isVisible = false
-        for panel in panels.values {
+    private func apply(_ note: Note) {
+        guard let panel = panels[note.id] else { return }
+        let shown = note.kept || !note.hidden
+
+        if shown {
+            panel.ignoresMouseEvents = false
+            if panel.alphaValue < 1 {
+                panel.alphaValue = 1
+                panel.orderFrontRegardless()
+            }
+        } else {
+            // An invisible note must neither swallow clicks nor keep the caret,
+            // or typing would land in a note nobody can see.
+            panel.makeFirstResponder(nil)
             panel.alphaValue = 0
-            // Invisible windows must not keep swallowing clicks.
             panel.ignoresMouseEvents = true
         }
     }
 
     /// Moves a note between "all desktops" and "this desktop".
     func setSpaces(_ spaces: NoteSpaces, for id: UUID) {
-        guard var note = store?.notes.first(where: { $0.id == id }) else { return }
-        note.spaces = spaces
-        store?.update(note)
+        store?.modify(id) { $0.spaces = spaces }
 
         guard let panel = panels[id] else { return }
         panel.collectionBehavior = Self.behaviour(for: spaces)
         // Re-order so the change takes hold on the desktop showing right now, which
         // is the one the user is looking at while they click it.
         panel.orderFrontRegardless()
+        applyAll()
     }
 
     /// Brings a single note forward and puts the cursor in it — used right after a
-    /// note arrives by voice, so you can see what landed.
+    /// note arrives by voice, or is pulled from the stack, so you can see what
+    /// landed. Only that note comes out; the rest stay where they are.
     func reveal(_ id: UUID) {
-        showAll()
+        store?.modify(id) { $0.hidden = false }
+        applyAll()
+
         guard let panel = panels[id] else { return }
         panel.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
@@ -179,11 +237,19 @@ final class NoteWindows {
         panel.animationBehavior = .none
         panel.minSize = NSSize(width: 180 + margin * 2, height: 120 + margin * 2)
 
+        let id = note.id
         let view = NoteView(
             note: note,
-            onChange: { [weak self] updated in self?.store?.update(updated) },
+            onChange: { [weak self] updated in
+                // Only what the sheet itself edits. Position and visibility belong to
+                // the window, and the sheet's copy of them is never current.
+                self?.store?.modify(id) {
+                    $0.text = updated.text
+                    $0.colour = updated.colour
+                }
+            },
             onDelete: { [weak self] in
-                guard let self, let current = self.store?.notes.first(where: { $0.id == note.id }) else { return }
+                guard let self, let current = self.store?.note(id) else { return }
                 self.store?.delete(current)
                 self.sync()
             },
@@ -200,7 +266,13 @@ final class NoteWindows {
                 self?.panels[note.id]?.resizeAnchor = nil
             },
             onSpacesChange: { [weak self] spaces in
-                self?.setSpaces(spaces, for: note.id)
+                self?.setSpaces(spaces, for: id)
+            },
+            onKeptChange: { [weak self] kept in
+                self?.setKept(kept, for: id)
+            },
+            onPutAway: { [weak self] in
+                self?.putAway(id)
             }
         )
 
@@ -210,16 +282,16 @@ final class NoteWindows {
         hosting.sizingOptions = []
         panel.contentView = hosting
         panel.setFrame(windowFrame, display: false)
+        // Starts invisible; `apply` decides whether it comes out.
+        panel.alphaValue = 0
+        panel.ignoresMouseEvents = true
 
         log.info("placed \(note.id.uuidString.prefix(4), privacy: .public) at \(Int(note.frame.width))x\(Int(note.frame.height))")
 
         // Assigned after the initial placement so restoring a saved position does
         // not immediately report itself back as a change.
         panel.onSheetFrameChange = { [weak self] frame in
-            guard let self, var current = self.store?.notes.first(where: { $0.id == note.id }) else { return }
-            guard current.frame != frame else { return }
-            current.frame = frame
-            self.store?.update(current)
+            self?.store?.modify(id) { $0.frame = frame }
         }
 
         return panel

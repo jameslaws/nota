@@ -18,18 +18,38 @@ struct Note: Identifiable, Equatable, Sendable {
     var frame: CGRect
     var created: Date
     var spaces: NoteSpaces = .all
+    /// Kept notes are the ones you are working from: solid, and still on screen
+    /// when every other note is put away.
+    var kept: Bool = false
+    /// Put away. A hidden note that follows you across desktops waits in the stack;
+    /// one pinned to a desktop simply fades out where it sits.
+    var hidden: Bool = false
+
+    /// Hidden notes that belong in the stack. Kept notes never hide, and a note
+    /// pinned to a desktop holds its place there instead of joining the pile.
+    var isStacked: Bool { hidden && !kept && spaces == .all }
 
     /// First non-empty line, used for the menu and for the window's accessibility title.
     var summary: String {
-        let line = text
-            .split(separator: "\n", omittingEmptySubsequences: true)
-            .first { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
-            .map(String.init) ?? "Empty note"
+        lines.first ?? "Empty note"
+    }
 
-        return line
-            .replacingOccurrences(of: "^#{1,6}\\s*", with: "", options: .regularExpression)
-            .replacingOccurrences(of: "^[-*]\\s+(\\[[ xX]\\]\\s*)?", with: "", options: .regularExpression)
-            .trimmingCharacters(in: .whitespaces)
+    /// Everything after the summary line, flattened onto one line for previews.
+    var preview: String {
+        lines.dropFirst().joined(separator: " ")
+    }
+
+    /// Non-empty lines with their markdown markers stripped.
+    private var lines: [String] {
+        text
+            .split(separator: "\n", omittingEmptySubsequences: true)
+            .map { line in
+                line
+                    .replacingOccurrences(of: "^\\s*#{1,6}\\s*", with: "", options: .regularExpression)
+                    .replacingOccurrences(of: "^\\s*[-*]\\s+(\\[[ xX]\\]\\s*)?", with: "", options: .regularExpression)
+                    .trimmingCharacters(in: .whitespaces)
+            }
+            .filter { !$0.isEmpty }
     }
 
     var isEmpty: Bool { text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -41,7 +61,9 @@ struct Note: Identifiable, Equatable, Sendable {
             colour: colour,
             frame: CGRect(origin: origin, size: CGSize(width: 268, height: 232)),
             created: .now,
-            spaces: .all
+            spaces: .all,
+            kept: false,
+            hidden: false
         )
     }
 }
@@ -64,6 +86,8 @@ extension Note {
         h: \(Int(frame.size.height))
         created: \(ISO8601DateFormatter().string(from: created))
         spaces: \(spaces.rawValue)
+        kept: \(kept)
+        hidden: \(hidden)
         ---
         \(text)
         """
@@ -90,6 +114,8 @@ extension Note {
         self.colour = fields["colour"].flatMap(NotePaper.init(rawValue:)) ?? .butter
         self.created = fields["created"].flatMap { ISO8601DateFormatter().date(from: $0) } ?? .now
         self.spaces = fields["spaces"].flatMap(NoteSpaces.init(rawValue:)) ?? .all
+        self.kept = fields["kept"] == "true"
+        self.hidden = fields["hidden"] == "true"
 
         let x = Double(fields["x"] ?? "") ?? 200
         let y = Double(fields["y"] ?? "") ?? 200

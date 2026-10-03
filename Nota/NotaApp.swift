@@ -46,8 +46,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let core = NotaCore.shared
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        core.start()
         buildStatusItem()
+        core.windows.onChange = { [weak self] in self?.refreshIcon() }
+        core.start()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
@@ -82,8 +83,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func refreshIcon() {
-        // Filled when the notes are on screen, outlined when they are hidden — the
-        // icon says what a click will do without needing a badge.
+        // Filled when the notes are on screen, outlined when they are put away — the
+        // icon says what a click will do without needing a badge. Kept notes do not
+        // count: they stay out either way.
         statusItem?.button?.image = StatusIcon.image(notesVisible: core.windows.isVisible)
         statusItem?.button?.toolTip = core.windows.isVisible ? "Hide notes" : "Show notes"
     }
@@ -101,13 +103,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(.separator())
 
         let count = core.store.notes.count
-        let counter = NSMenuItem(
-            title: count == 1 ? "1 note" : "\(count) notes",
-            action: nil,
-            keyEquivalent: ""
-        )
+        let stacked = core.store.stacked.count
+        var summary = count == 1 ? "1 note" : "\(count) notes"
+        if stacked > 0 { summary += " · \(stacked) in the stack" }
+        let counter = NSMenuItem(title: summary, action: nil, keyEquivalent: "")
         counter.isEnabled = false
         menu.addItem(counter)
+
+        if stacked > 0 {
+            menu.addItem(withTitle: "Look Through Stack", action: #selector(openStack), keyEquivalent: "").target = self
+        }
 
         menu.addItem(withTitle: "Reveal Notes Folder", action: #selector(revealFolder), keyEquivalent: "").target = self
 
@@ -133,6 +138,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         refreshIcon()
     }
 
+    @objc private func openStack() {
+        core.windows.stack.expand()
+    }
+
     @objc private func revealFolder() {
         NSWorkspace.shared.activateFileViewerSelecting([core.store.folder])
     }
@@ -156,6 +165,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             switch action {
             case "toggle":
                 // "Nota" on its own means show me what I've got, or put it away.
+                // Kept notes stay out either way.
                 core.windows.toggle()
             case "new":
                 core.capture(text)

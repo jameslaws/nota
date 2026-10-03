@@ -72,6 +72,32 @@ final class NoteStore {
         return note
     }
 
+    func note(_ id: UUID) -> Note? {
+        notes.first { $0.id == id }
+    }
+
+    /// Hidden notes waiting in the stack, most recent first.
+    var stacked: [Note] {
+        notes.filter(\.isStacked).reversed()
+    }
+
+    /// Changes one note in place, starting from what the store holds now. Callers
+    /// describe only the fields they own, so a stale copy elsewhere can never write
+    /// back an old position or an old colour.
+    func modify(_ id: UUID, _ change: (inout Note) -> Void) {
+        guard let index = notes.firstIndex(where: { $0.id == id }) else { return }
+        var note = notes[index]
+        change(&note)
+        guard note != notes[index] else { return }
+        notes[index] = note
+        scheduleWrite(note)
+    }
+
+    /// The same change across every note; only the ones it actually alters are saved.
+    func modifyAll(_ change: (inout Note) -> Void) {
+        for note in notes { modify(note.id, change) }
+    }
+
     func update(_ note: Note) {
         guard let index = notes.firstIndex(where: { $0.id == note.id }) else { return }
         notes[index] = note

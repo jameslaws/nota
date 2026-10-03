@@ -12,8 +12,10 @@
 		37AB87CD69E7B4C9D3D61476 /* ResizeGrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = E700CBFA11A8931745BF6B80 /* ResizeGrip.swift */; };
 		4D01B8AC16DF639C46EAA2B3 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7694DF7028193E04BD67848 /* NoteStore.swift */; };
 		714ED78ACCFC72092EA25B04 /* NoteTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE98B8C3E4E88E972CCD3E87 /* NoteTextView.swift */; };
+		7500B4D0865915DC23F86084 /* NoteStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 546A8D9B892437F397C9CF35 /* NoteStack.swift */; };
 		89CD5C1FBA1BADB4CB92C4B2 /* MarkdownScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73022DDA240FAA244A80233A /* MarkdownScanner.swift */; };
 		94CEEB9F6CCBFF87C830D496 /* MarkdownStyler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C55F636330B02109C69FE2 /* MarkdownStyler.swift */; };
+		BAA3F3AEDCEDB6603F5A8426 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A99B71AB7F8D8E32F41CAB9 /* StackView.swift */; };
 		BD19A96B8F5CE39E2C16D8A1 /* NotaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4362EDAF5935D92B6BDE93D /* NotaApp.swift */; };
 		D3227538492C4B1BA9C96855 /* NotePaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8D52C9DFD814857BEECEA6 /* NotePaper.swift */; };
 		D903328A03A3EB7AE231D561 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1F60E6BDC6D647C8C37012 /* Note.swift */; };
@@ -21,8 +23,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A99B71AB7F8D8E32F41CAB9 /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
 		42C55F636330B02109C69FE2 /* MarkdownStyler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownStyler.swift; sourceTree = "<group>"; };
 		4D0B0DFEA39684AA614AADBF /* StatusIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusIcon.swift; sourceTree = "<group>"; };
+		546A8D9B892437F397C9CF35 /* NoteStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStack.swift; sourceTree = "<group>"; };
 		5C8D52C9DFD814857BEECEA6 /* NotePaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotePaper.swift; sourceTree = "<group>"; };
 		5F94B22E77528F06516D9669 /* Nota.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nota.entitlements; sourceTree = "<group>"; };
 		73022DDA240FAA244A80233A /* MarkdownScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownScanner.swift; sourceTree = "<group>"; };
@@ -57,6 +61,7 @@
 		4188E1CA153DAEDAEF94EB87 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				546A8D9B892437F397C9CF35 /* NoteStack.swift */,
 				A7694DF7028193E04BD67848 /* NoteStore.swift */,
 				8C6E94C8933BF75EB01AE25C /* NoteWindows.swift */,
 			);
@@ -83,6 +88,7 @@
 				AE98B8C3E4E88E972CCD3E87 /* NoteTextView.swift */,
 				D23937F3B73DB9FA374BB43E /* NoteView.swift */,
 				E700CBFA11A8931745BF6B80 /* ResizeGrip.swift */,
+				2A99B71AB7F8D8E32F41CAB9 /* StackView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -170,11 +176,13 @@
 				BD19A96B8F5CE39E2C16D8A1 /* NotaApp.swift in Sources */,
 				D903328A03A3EB7AE231D561 /* Note.swift in Sources */,
 				D3227538492C4B1BA9C96855 /* NotePaper.swift in Sources */,
+				7500B4D0865915DC23F86084 /* NoteStack.swift in Sources */,
 				4D01B8AC16DF639C46EAA2B3 /* NoteStore.swift in Sources */,
 				714ED78ACCFC72092EA25B04 /* NoteTextView.swift in Sources */,
 				02FBBA89B171A8A128F7E251 /* NoteView.swift in Sources */,
 				2E3E127FDB94FD00A283566E /* NoteWindows.swift in Sources */,
 				37AB87CD69E7B4C9D3D61476 /* ResizeGrip.swift in Sources */,
+				BAA3F3AEDCEDB6603F5A8426 /* StackView.swift in Sources */,
 				DCCEFD3819183BDD53A912B2 /* StatusIcon.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -238,7 +246,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -336,7 +344,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
