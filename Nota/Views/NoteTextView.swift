@@ -236,6 +236,7 @@ nonisolated final class ClosureMenuItem: NSMenuItem {
     }
 
     @objc private func fire() {
+        let handler = self.handler
         MainActor.assumeIsolated { handler() }
     }
 }
