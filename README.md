@@ -15,5 +15,5 @@ macOS 26, Xcode 26. The Xcode project is generated from `project.yml` with
 committed so a plain `xcodebuild` works:
 
 ```sh
-xcodebuild -project Nota.xcodeproj -scheme Nota -configuration Release -derivedDataPath .build build
+xcodebuild -project Nota.xcodeproj -target Nota -configuration Release build
 ```
