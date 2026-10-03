@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 /// The stack: a little deck of put-away notes, or — clicked — the list of them.
@@ -163,9 +164,16 @@ private struct StackList: View {
                 .textFieldStyle(.plain)
                 .font(.system(size: 12.5))
                 .focused($searching)
-                // Return brings back the top match.
+                // Return brings back the top match. On the Mac a text field also
+                // "submits" when it loses focus — which happens every time the stack
+                // folds away — so only a real Return keypress counts.
                 .onSubmit {
-                    if let first = matches.first { onPullOut(first.id) }
+                    guard let event = NSApp.currentEvent,
+                          event.type == .keyDown,
+                          event.keyCode == 36 || event.keyCode == 76,
+                          let first = matches.first
+                    else { return }
+                    onPullOut(first.id)
                 }
         }
         .padding(.horizontal, 8)
