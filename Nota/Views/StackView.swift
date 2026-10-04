@@ -41,7 +41,7 @@ struct StackView: View {
 // MARK: - Deck
 
 /// Up to three sheets, slightly askew, showing the colours of the most recent
-/// notes put away, with the count on top.
+/// notes filed into the stack, with the count on top.
 private struct StackDeck: View {
     let notes: [Note]
     @State private var isHovering = false
@@ -73,8 +73,8 @@ private struct StackDeck: View {
         .animation(.easeOut(duration: 0.16), value: isHovering)
         .onHover { isHovering = $0 }
         .help(notes.count == 1
-              ? "1 note put away — click to find it, drag to move the stack"
-              : "\(notes.count) notes put away — click to look through them, drag to move the stack")
+              ? "1 note in the stack — click to find it, drag to move the stack"
+              : "\(notes.count) notes in the stack — click to look through them, drag to move the stack")
     }
 
     private struct Sheet: View {
@@ -137,11 +137,11 @@ private struct StackList: View {
 
             Spacer()
 
-            Button("Show All", action: onShowAll)
+            Button("Take All Out", action: onShowAll)
                 .buttonStyle(.plain)
                 .font(.system(size: 11.5, weight: .medium))
                 .foregroundStyle(.secondary)
-                .help("Bring every note back out")
+                .help("Take every note out of the stack and put it back where it was")
 
             Button(action: onClose) {
                 Image(systemName: "xmark")
@@ -187,7 +187,7 @@ private struct StackList: View {
     @ViewBuilder
     private var list: some View {
         if matches.isEmpty {
-            Text(notes.isEmpty ? "Nothing put away." : "No note mentions “\(query)”.")
+            Text(notes.isEmpty ? "The stack is empty." : "No note mentions “\(query)”.")
                 .font(.system(size: 12))
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

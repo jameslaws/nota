@@ -78,7 +78,7 @@ final class NoteStore {
 
     /// Hidden notes waiting in the stack, most recent first.
     var stacked: [Note] {
-        notes.filter(\.isStacked).reversed()
+        notes.filter { $0.stacked && !$0.kept }.reversed()
     }
 
     /// Changes one note in place, starting from what the store holds now. Callers

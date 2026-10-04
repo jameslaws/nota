@@ -83,9 +83,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func refreshIcon() {
-        // Filled when the notes are on screen, outlined when they are put away — the
-        // icon says what a click will do without needing a badge. Kept notes do not
-        // count: they stay out either way.
+        // Filled when the notes and stack are showing, outlined when they are put
+        // away — the icon says what a click will do without needing a badge. Kept
+        // notes stay out either way.
         statusItem?.button?.image = StatusIcon.image(notesVisible: core.windows.isVisible)
         statusItem?.button?.toolTip = core.windows.isVisible ? "Hide notes" : "Show notes"
     }
@@ -139,6 +139,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func openStack() {
+        // The stack only shows with your notes.
+        core.windows.showAll()
         core.windows.stack.expand()
     }
 

@@ -188,8 +188,7 @@ struct NoteView: View {
         let pin = ClosureMenuItem(title: "Pin to This Desktop") { toggleSpaces() }
         pin.state = note.spaces == .desktop ? .on : .off
 
-        // A pinned note holds its place on its desktop rather than joining the stack.
-        let away = ClosureMenuItem(title: note.spaces == .desktop ? "Hide Note" : "Put in Stack") { putAway() }
+        let away = ClosureMenuItem(title: "Put in Stack") { putAway() }
 
         return [keep, pin, away]
     }

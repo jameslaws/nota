@@ -21,13 +21,9 @@ struct Note: Identifiable, Equatable, Sendable {
     /// Kept notes are the ones you are working from: solid, and still on screen
     /// when every other note is put away.
     var kept: Bool = false
-    /// Put away. A hidden note that follows you across desktops waits in the stack;
-    /// one pinned to a desktop simply fades out where it sits.
-    var hidden: Bool = false
-
-    /// Hidden notes that belong in the stack. Kept notes never hide, and a note
-    /// pinned to a desktop holds its place there instead of joining the pile.
-    var isStacked: Bool { hidden && !kept && spaces == .all }
+    /// Waiting in the stack rather than placed somewhere on screen. Notes you have
+    /// pulled out and put somewhere stay out; everything else lives in the pile.
+    var stacked: Bool = false
 
     /// First non-empty line, used for the menu and for the window's accessibility title.
     var summary: String {
@@ -63,7 +59,7 @@ struct Note: Identifiable, Equatable, Sendable {
             created: .now,
             spaces: .all,
             kept: false,
-            hidden: false
+            stacked: false
         )
     }
 }
@@ -87,7 +83,7 @@ extension Note {
         created: \(ISO8601DateFormatter().string(from: created))
         spaces: \(spaces.rawValue)
         kept: \(kept)
-        hidden: \(hidden)
+        stacked: \(stacked)
         ---
         \(text)
         """
@@ -115,7 +111,7 @@ extension Note {
         self.created = fields["created"].flatMap { ISO8601DateFormatter().date(from: $0) } ?? .now
         self.spaces = fields["spaces"].flatMap(NoteSpaces.init(rawValue:)) ?? .all
         self.kept = fields["kept"] == "true"
-        self.hidden = fields["hidden"] == "true"
+        self.stacked = fields["stacked"] == "true"
 
         let x = Double(fields["x"] ?? "") ?? 200
         let y = Double(fields["y"] ?? "") ?? 200

@@ -42,7 +42,7 @@ final class NoteWindows {
         stack.attach(
             to: store,
             onPullOut: { [weak self] id in self?.reveal(id) },
-            onShowAll: { [weak self] in self?.showAll() }
+            onShowAll: { [weak self] in self?.unstackAll() }
         )
         watchForClicksAway()
         sync()
@@ -90,38 +90,46 @@ final class NoteWindows {
 
     // MARK: - Visibility
     //
-    // Each note carries its own hidden flag rather than the app holding one switch
-    // for everything, because kept notes and notes pulled from the stack have to be
-    // able to stay out while the rest are away.
+    // One switch for "notes showing", and one flag per note for "in the stack or
+    // placed on screen". Showing brings out the placed notes and the stack; hiding
+    // puts both away. Kept notes ignore the switch and stay out.
 
-    /// True while any note that *can* be put away is on screen — what the menu bar
-    /// click acts on. Kept notes do not count; they never hide.
-    var isVisible: Bool {
-        store?.notes.contains { !$0.kept && !$0.hidden } ?? false
+    private static let shownKey = "notesShown"
+
+    /// What the menu bar click flips. Remembered across launches.
+    private(set) var isVisible: Bool = UserDefaults.standard.object(forKey: shownKey) as? Bool ?? true {
+        didSet { UserDefaults.standard.set(isVisible, forKey: Self.shownKey) }
     }
 
-    /// The menu bar click: put the loose notes away, or bring everything back.
+    /// The menu bar click: put everything away, or bring it back.
     @discardableResult
     func toggle() -> Bool {
-        if isVisible { hideAll() } else { showAll() }
+        isVisible.toggle()
+        applyAll()
         return isVisible
     }
 
     func showAll() {
-        store?.modifyAll { $0.hidden = false }
+        isVisible = true
         applyAll()
     }
 
     func hideAll() {
-        store?.modifyAll { if !$0.kept { $0.hidden = true } }
+        isVisible = false
         applyAll()
     }
 
-    /// Tucks one note away on its own. Putting a kept note away means you are done
+    /// Takes every note out of the stack and lays them all out.
+    func unstackAll() {
+        store?.modifyAll { $0.stacked = false }
+        showAll()
+    }
+
+    /// Files one note into the stack. Putting a kept note away means you are done
     /// working from it, so it stops being kept.
     func putAway(_ id: UUID) {
         store?.modify(id) {
-            $0.hidden = true
+            $0.stacked = true
             $0.kept = false
         }
         applyAll()
@@ -130,8 +138,8 @@ final class NoteWindows {
     func setKept(_ kept: Bool, for id: UUID) {
         store?.modify(id) {
             $0.kept = kept
-            // A kept note is on screen by definition.
-            if kept { $0.hidden = false }
+            // A kept note is out on screen by definition.
+            if kept { $0.stacked = false }
         }
         applyAll()
     }
@@ -144,13 +152,13 @@ final class NoteWindows {
     private func applyAll() {
         guard let store else { return }
         for note in store.notes { apply(note) }
-        stack.refresh()
+        stack.refresh(visible: isVisible)
         onChange?()
     }
 
     private func apply(_ note: Note) {
         guard let panel = panels[note.id] else { return }
-        let shown = note.kept || !note.hidden
+        let shown = note.kept || (isVisible && !note.stacked)
 
         if shown {
             panel.ignoresMouseEvents = false
@@ -181,9 +189,10 @@ final class NoteWindows {
 
     /// Brings a single note forward and puts the cursor in it — used right after a
     /// note arrives by voice, or is pulled from the stack, so you can see what
-    /// landed. Only that note comes out; the rest stay where they are.
+    /// landed. Your notes come out with it if they were put away.
     func reveal(_ id: UUID) {
-        store?.modify(id) { $0.hidden = false }
+        store?.modify(id) { $0.stacked = false }
+        isVisible = true
         applyAll()
 
         guard let panel = panels[id] else { return }

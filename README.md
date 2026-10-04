@@ -26,12 +26,12 @@ command line tools, so it runs on a Mac without Xcode.
 
 ## How notes behave
 
-- **Out**: on screen, translucent until hovered. The menu bar click puts them away.
-- **Kept** (eye): solid, and stays on screen when the others are put away. Still draggable.
-- **Stack**: put-away notes collect in a small deck at the screen edge (drag it
-  anywhere). Click it to search the pile and bring one note back.
-- **Pinned to a desktop** (right-click a note): stays on that desktop, and when put
-  away fades where it sits instead of joining the stack.
+- **Placed**: pulled out and put somewhere on screen; translucent until hovered.
+- **Stacked**: filed into the stack (right-click → Put in Stack), a small deck at
+  the screen edge you can drag anywhere. Click it to search and pull a note out.
+- **Kept** (eye): solid, and stays on screen even when your notes are hidden.
+- The menu bar click shows or hides placed notes and the stack together.
+- **Pinned to a desktop** (right-click): a placed note that stays on one desktop.
 
 ## Markdown
 

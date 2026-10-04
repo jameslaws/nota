@@ -46,12 +46,12 @@ final class NoteStack {
         self.onShowAll = onShowAll
     }
 
-    /// Shows the deck while anything is in the stack, and takes it away when the
-    /// stack is empty.
-    func refresh() {
+    /// Shows the deck while your notes are showing and anything is in the stack;
+    /// it goes away with the notes.
+    func refresh(visible: Bool) {
         guard let store else { return }
 
-        if store.stacked.isEmpty {
+        if !visible || store.stacked.isEmpty {
             collapse()
             panel?.orderOut(nil)
             return
